@@ -1,26 +1,28 @@
 use regex::Regex;
 
 fn main() {
-    //Regex
-    let re_add = Regex::new(r"(\d+)\s?\+\s?(\d+)").unwrap();
-    let re_sus = Regex::new(r"(\d+)\s?\-\s?(\d+)").unwrap();
-    let re_mult = Regex::new(r"(\d+)\s?\*\s?(\d+)").unwrap();
-    let re_div = Regex::new(r"(\d+)\s?/\s?(\d+)").unwrap();
-
     //Traer Datos Usuarios
     let mut expression: String = String::new();
     println!("Introduce tu expresion: ");
     std::io::stdin().read_line(&mut expression).unwrap();
 
-    expression = make_operation(re_mult, expression, "*");
-    expression = make_operation(re_div, expression, "/");
-    expression = make_operation(re_add, expression, "+");
-    expression = make_operation(re_sus, expression, "-");
+    expression = make_operation(expression, "*");
+    expression = make_operation(expression, "/");
+    expression = make_operation(expression, "+");
+    expression = make_operation(expression, "-");
 
     println!("Resultado: {}", expression);
 }
 
-fn make_operation(reg: Regex, mut expression: String, operation: &str) -> String {
+fn make_operation(mut expression: String, operation: &str) -> String {
+    let reg: Regex = match operation {
+        "+" => Regex::new(r"(\d+)\s?\+\s?(\d+)").unwrap(),
+        "-" => Regex::new(r"(\d+)\s?\-\s?(\d+)").unwrap(),
+        "*" => Regex::new(r"(\d+)\s?\*\s?(\d+)").unwrap(),
+        "/" => Regex::new(r"(\d+)\s?/\s?(\d+)").unwrap(),
+        _ => Regex::new(r"").unwrap(),
+    };
+
     loop {
         let caps = reg.captures(expression.as_str());
 
